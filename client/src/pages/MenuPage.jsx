@@ -26,43 +26,48 @@ function MenuPage() {
 
   return (
     <MainLayout>
-      <section className="bg-white py-20 md:py-28 px-4 md:px-12">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-[#191c1d] mb-6">
-              Order your favorite food
-            </h1>
+      <section className="bg-white">
+  <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24 grid lg:grid-cols-2 gap-16 items-center">
+    <div>
+      <span className="inline-block bg-orange-100 text-[#ad2c00] px-4 py-2 rounded-full font-semibold mb-6">
+        Fast Delivery • Fresh Food
+      </span>
 
-            <p className="text-lg text-[#5c4038] mb-8 max-w-xl">
-              Fresh meals delivered fast to your doorstep. Experience delicious meals from top kitchens.
-            </p>
+      <h1 className="text-5xl md:text-7xl font-black leading-tight text-[#191c1d]">
+        Order your favorite food
+      </h1>
 
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#menu"
-                className="bg-[#ad2c00] text-white px-8 py-4 rounded-xl font-bold"
-              >
-                Browse Menu
-              </a>
+      <p className="mt-6 text-xl text-gray-500 leading-8 max-w-xl">
+        Fresh meals delivered fast to your doorstep.
+        Experience premium dishes from top kitchens.
+      </p>
 
-              <Link
-                to="/cart"
-                className="border-2 border-[#ad2c00] text-[#ad2c00] px-8 py-4 rounded-xl font-bold"
-              >
-                View Cart
-              </Link>
-            </div>
-          </div>
+      <div className="flex flex-wrap gap-4 mt-10">
+        <a
+          href="#menu"
+          className="bg-[#ad2c00] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#922500] transition"
+        >
+          Browse Menu
+        </a>
 
-          <div className="hidden md:block">
-            <img
-              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
-              alt="Food table"
-              className="rounded-[2rem] shadow-2xl h-[430px] w-full object-cover"
-            />
-          </div>
-        </div>
-      </section>
+        <Link
+          to="/cart"
+          className="border-2 border-[#ad2c00] text-[#ad2c00] px-8 py-4 rounded-2xl font-bold hover:bg-orange-50 transition"
+        >
+          View Cart
+        </Link>
+      </div>
+    </div>
+
+    <div>
+      <img
+        src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+        alt="Food"
+        className="w-full h-[500px] object-cover rounded-[40px] shadow-2xl"
+      />
+    </div>
+  </div>
+</section>
 
       <section
         id="menu"
@@ -83,7 +88,7 @@ function MenuPage() {
         {loading ? (
           <p>Loading menu...</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {menu.map((item) => (
               <FoodCard key={item.id} item={item} />
             ))}

@@ -1,51 +1,54 @@
 import { Link, NavLink } from "react-router-dom";
+import { ShoppingCart } from "lucide-react";
+
 import { useCart } from "../context/CartContext";
 
 function Header() {
   const { cartItems } = useCart();
 
-  const itemCount = cartItems.reduce(
+  const totalItems = cartItems.reduce(
     (sum, item) => sum + item.quantity,
     0
   );
 
-  const navLinkClass = ({ isActive }) =>
+  const navClass = ({ isActive }) =>
     isActive
-      ? "text-[#ad2c00] border-b-2 border-[#ad2c00] pb-1 font-semibold"
-      : "text-[#5c4038] hover:text-[#ad2c00] font-semibold";
+      ? "text-[#ad2c00] font-semibold"
+      : "text-gray-500 hover:text-[#ad2c00] transition";
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
-      <nav className="max-w-7xl mx-auto px-4 md:px-12 py-4 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
         <Link
           to="/"
-          className="text-xl font-extrabold text-[#ad2c00]"
+          className="text-3xl font-extrabold text-[#ad2c00]"
         >
           FoodExpress
         </Link>
 
-        <div className="hidden md:flex items-center gap-10 text-sm">
-          <NavLink to="/" className={navLinkClass}>
+        <nav className="hidden md:flex items-center gap-10">
+          <NavLink to="/" className={navClass}>
             Menu
           </NavLink>
 
-          <NavLink to="/cart" className={navLinkClass}>
+          <NavLink to="/cart" className={navClass}>
             Cart
           </NavLink>
-        </div>
+        </nav>
 
         <Link
           to="/cart"
-          className="relative text-[#ad2c00] text-2xl"
+          className="relative text-[#ad2c00]"
         >
-          🛒
-          {itemCount > 0 && (
-            <span className="absolute -top-2 -right-3 bg-[#ad2c00] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-              {itemCount}
+          <ShoppingCart size={28} />
+
+          {totalItems > 0 && (
+            <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#ad2c00] text-white text-xs flex items-center justify-center font-bold">
+              {totalItems}
             </span>
           )}
         </Link>
-      </nav>
+      </div>
     </header>
   );
 }

@@ -4,31 +4,33 @@ function FoodCard({ item }) {
   const { addToCart } = useCart();
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm overflow-hidden hover:-translate-y-1 transition-transform">
-      <div className="h-56 relative overflow-hidden">
+    <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300">
+      <div className="relative h-64 overflow-hidden">
         <img
           src={item.image}
           alt={item.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover hover:scale-105 transition duration-500"
         />
 
-        <span className="absolute top-4 right-4 bg-white px-4 py-1 rounded-full font-bold text-[#ad2c00] text-sm">
-          ₹{item.price}
-        </span>
+        <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-full shadow-md">
+          <span className="font-bold text-[#ad2c00]">
+            ₹{item.price}
+          </span>
+        </div>
       </div>
 
       <div className="p-6">
-        <h3 className="text-xl font-bold mb-2">
+        <h3 className="text-2xl font-bold mb-2">
           {item.name}
         </h3>
 
-        <p className="text-gray-600 mb-5 min-h-[48px]">
+        <p className="text-gray-500 mb-6 min-h-[48px]">
           {item.description}
         </p>
 
         <button
           onClick={() => addToCart(item)}
-          className="w-full bg-[#ad2c00] text-white py-3 rounded-xl font-semibold hover:opacity-90 active:scale-[0.98]"
+          className="w-full bg-[#ad2c00] hover:bg-[#922500] text-white py-4 rounded-2xl font-bold transition"
         >
           Add to Cart
         </button>

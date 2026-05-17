@@ -67,5 +67,3 @@ function FoodCard({ item }) {
 }
 
 export default FoodCard;
-
-export default FoodCard;

@@ -23,21 +23,62 @@ function CheckoutPage() {
   });
 
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [placingOrder, setPlacingOrder] = useState(false);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
+
+    setFieldErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const validateDeliveryDetails = () => {
+    const errors = {};
+    const name = form.customerName.trim();
+    const phone = form.phoneNumber.trim();
+    const address = form.address.trim();
+
+    if (!name) {
+      errors.customerName = "Full name is required.";
+    } else if (name.length < 2) {
+      errors.customerName = "Full name must be at least 2 characters.";
+    } else if (!/^[a-zA-Z\s.'-]+$/.test(name)) {
+      errors.customerName = "Full name can only include letters and spaces.";
+    }
+
+    if (!phone) {
+      errors.phoneNumber = "Phone number is required.";
+    } else if (!/^[6-9]\d{9}$/.test(phone)) {
+      errors.phoneNumber = "Enter a valid 10-digit phone number.";
+    }
+
+    if (!address) {
+      errors.address = "Delivery address is required.";
+    } else if (address.length < 10) {
+      errors.address = "Delivery address must be at least 10 characters.";
+    }
+
+    return errors;
   };
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
 
-    if (!form.customerName || !form.phoneNumber || !form.address) {
-      setError("Please fill all delivery details.");
+    const validationErrors = validateDeliveryDetails();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors);
+      setError("Please fix the highlighted delivery details.");
       return;
     }
 
@@ -50,9 +91,9 @@ function CheckoutPage() {
       setPlacingOrder(true);
 
       const payload = {
-        customerName: form.customerName,
-        phoneNumber: form.phoneNumber,
-        address: form.address,
+        customerName: form.customerName.trim(),
+        phoneNumber: form.phoneNumber.trim(),
+        address: form.address.trim(),
         items: cartItems.map((item) => ({
           menuItemId: item.id,
           quantity: item.quantity,
@@ -139,8 +180,27 @@ function CheckoutPage() {
                   value={form.customerName}
                   onChange={handleChange}
                   placeholder="Deepak Sharma"
-                  className="w-full h-12 rounded-xl border border-gray-200 px-4 outline-none focus:border-[#ad2c00]"
+                  aria-invalid={Boolean(fieldErrors.customerName)}
+                  aria-describedby={
+                    fieldErrors.customerName
+                      ? "customerName-error"
+                      : undefined
+                  }
+                  className={`w-full h-12 rounded-xl border px-4 outline-none focus:border-[#ad2c00] ${
+                    fieldErrors.customerName
+                      ? "border-red-400 bg-red-50"
+                      : "border-gray-200"
+                  }`}
                 />
+
+                {fieldErrors.customerName && (
+                  <p
+                    id="customerName-error"
+                    className="mt-2 text-sm text-red-600"
+                  >
+                    {fieldErrors.customerName}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -153,8 +213,29 @@ function CheckoutPage() {
                   value={form.phoneNumber}
                   onChange={handleChange}
                   placeholder="9999999999"
-                  className="w-full h-12 rounded-xl border border-gray-200 px-4 outline-none focus:border-[#ad2c00]"
+                  inputMode="numeric"
+                  maxLength="10"
+                  aria-invalid={Boolean(fieldErrors.phoneNumber)}
+                  aria-describedby={
+                    fieldErrors.phoneNumber
+                      ? "phoneNumber-error"
+                      : undefined
+                  }
+                  className={`w-full h-12 rounded-xl border px-4 outline-none focus:border-[#ad2c00] ${
+                    fieldErrors.phoneNumber
+                      ? "border-red-400 bg-red-50"
+                      : "border-gray-200"
+                  }`}
                 />
+
+                {fieldErrors.phoneNumber && (
+                  <p
+                    id="phoneNumber-error"
+                    className="mt-2 text-sm text-red-600"
+                  >
+                    {fieldErrors.phoneNumber}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -169,8 +250,27 @@ function CheckoutPage() {
                 onChange={handleChange}
                 placeholder="Street, apartment, city"
                 rows="4"
-                className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#ad2c00]"
+                aria-invalid={Boolean(fieldErrors.address)}
+                aria-describedby={
+                  fieldErrors.address
+                    ? "address-error"
+                    : undefined
+                }
+                className={`w-full rounded-xl border px-4 py-3 outline-none focus:border-[#ad2c00] ${
+                  fieldErrors.address
+                    ? "border-red-400 bg-red-50"
+                    : "border-gray-200"
+                }`}
               />
+
+              {fieldErrors.address && (
+                <p
+                  id="address-error"
+                  className="mt-2 text-sm text-red-600"
+                >
+                  {fieldErrors.address}
+                </p>
+              )}
             </div>
 
             <div className="mt-6">

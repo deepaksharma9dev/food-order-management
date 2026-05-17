@@ -10,7 +10,30 @@
  * - Hover effects and smooth transitions
  */
 
+import { useState } from "react";
+
 import { useCart } from "../context/CartContext";
+
+const getOptimizedImageUrl = (url) => {
+  if (!url) {
+    return "";
+  }
+
+  try {
+    const imageUrl = new URL(url);
+
+    if (imageUrl.hostname.includes("images.unsplash.com")) {
+      imageUrl.searchParams.set("auto", "format");
+      imageUrl.searchParams.set("fit", "crop");
+      imageUrl.searchParams.set("w", "720");
+      imageUrl.searchParams.set("q", "75");
+    }
+
+    return imageUrl.toString();
+  } catch {
+    return url;
+  }
+};
 
 /**
  * FoodCard Component
@@ -19,19 +42,54 @@ import { useCart } from "../context/CartContext";
  * @param {Object} props.item - Menu item object with id, name, description, price, image
  * @returns {JSX.Element} Food card display element
  */
-function FoodCard({ item }) {
+function FoodCard({ item, loading = false, priority = false }) {
   // Get addToCart function from cart context
   const { addToCart } = useCart();
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  if (loading) {
+    return (
+      <div
+        className="bg-white rounded-3xl overflow-hidden shadow-sm animate-pulse"
+        aria-label="Loading menu item"
+      >
+        <div className="h-64 bg-gray-200" />
+
+        <div className="p-6">
+          <div className="h-7 bg-gray-200 rounded-lg w-2/3 mb-4" />
+          <div className="space-y-3 mb-6">
+            <div className="h-4 bg-gray-200 rounded w-full" />
+            <div className="h-4 bg-gray-200 rounded w-4/5" />
+          </div>
+          <div className="h-14 bg-gray-200 rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
+
+  const optimizedImage = getOptimizedImageUrl(item.image);
 
   return (
-    <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300">
+    <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-lg transition-[transform,box-shadow] duration-200 ease-out transform-gpu">
       {/* Image Section */}
-      <div className="relative h-64 overflow-hidden">
+      <div className="relative h-64 overflow-hidden bg-gray-100">
+        {!imageLoaded && (
+          <div className="absolute inset-0 animate-pulse bg-gray-200" />
+        )}
+
         {/* Food item image with hover zoom effect */}
         <img
-          src={item.image}
+          src={optimizedImage}
           alt={item.name}
-          className="w-full h-full object-cover hover:scale-105 transition duration-500"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
+          decoding="async"
+          width="720"
+          height="384"
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full h-full object-cover transition-[opacity,transform] duration-200 ease-out transform-gpu group-hover:scale-[1.025] ${
+            imageLoaded ? "opacity-100" : "opacity-0"
+          }`}
         />
 
         {/* Price Badge */}

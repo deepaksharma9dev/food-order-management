@@ -116,8 +116,12 @@ function MenuPage() {
           {/* Right Side - Hero Image */}
           <div>
             <img
-              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1100&q=80"
               alt="Food"
+              fetchPriority="high"
+              decoding="async"
+              width="1100"
+              height="500"
               className="w-full h-[500px] object-cover rounded-[40px] shadow-2xl"
             />
           </div>
@@ -143,18 +147,19 @@ function MenuPage() {
         </div>
 
         {/* Menu Items Grid */}
-        {loading ? (
-          // Loading state
-          <p>Loading menu...</p>
-        ) : (
-          // Menu items grid - responsive layout
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {/* Map through menu items and display each as a FoodCard */}
-            {menu.map((item) => (
-              <FoodCard key={item.id} item={item} />
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {loading
+            ? Array.from({ length: 6 }).map((_, index) => (
+                <FoodCard key={index} loading />
+              ))
+            : menu.map((item, index) => (
+                <FoodCard
+                  key={item.id}
+                  item={item}
+                  priority={index < 3}
+                />
+              ))}
+        </div>
       </section>
     </MainLayout>
   );

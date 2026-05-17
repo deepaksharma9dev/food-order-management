@@ -36,7 +36,7 @@ Administrators can:
 ### Backend
 - **Runtime**: Node.js
 - **Framework**: Express.js (v5.2.1)
-- **Database**: SQLite
+- **Database**: Neon PostgresQL
 - **ORM**: Prisma (v6.19.3)
 - **Real-time Communication**: Socket.io (v4.8.3)
 - **Testing**: Jest, Supertest

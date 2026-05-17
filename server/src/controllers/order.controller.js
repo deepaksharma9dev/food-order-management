@@ -80,7 +80,9 @@ const createOrder = async (req, res) => {
   });
 
   const io = req.app.get("io");
-  simulateOrderStatusUpdates(order.id, io);
+  if (process.env.NODE_ENV !== "test") {
+  simulateOrderStatus(order.id, io);
+}
 
   return res.status(201).json({
     success: true,
@@ -161,7 +163,9 @@ const updateOrderStatusManually = async (req, res) => {
     },
   });
 
+  if (io) {
   io.to(id).emit("orderStatusUpdated", order);
+}
 
   return res.json({
     success: true,

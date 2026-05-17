@@ -20,12 +20,15 @@ const updateOrderStatus = async (orderId, status, io) => {
     },
   });
 
-  io.to(orderId).emit("orderStatusUpdated", order);
+  if (io) {
+    io.to(orderId).emit("orderStatusUpdated", order);
+  }
 
   return order;
 };
 
 const simulateOrderStatusUpdates = (orderId, io) => {
+
   setTimeout(() => {
     updateOrderStatus(orderId, "Preparing", io);
   }, 5000);
